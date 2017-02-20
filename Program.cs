@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using FisherInsuranceAPI.Data;
 
 namespace FisherInsuranceAPI
 {
@@ -27,6 +25,16 @@ namespace FisherInsuranceAPI
                 .Build();
 
             host.Run();
+        }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            NewMethod(services);
+            services.AddMvc();
+        }
+
+        private static void NewMethod(IServiceCollection services)
+        {
+            services.AddSingleton<IMemoryStore, MemoryStore>();
         }
     }
 }
