@@ -28,13 +28,9 @@ namespace FisherInsuranceAPI
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            NewMethod(services);
+            
             services.AddMvc();
         }
 
-        private static void NewMethod(IServiceCollection services)
-        {
-            services.AddSingleton<IMemoryStore, MemoryStore>();
-        }
     }
 }
