@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using FisherInsuranceAPI.Data;
+
 
 namespace FisherInsuranceAPI
 {
@@ -26,11 +29,7 @@ namespace FisherInsuranceAPI
 
             host.Run();
         }
-        public void ConfigureServices(IServiceCollection services)
-        {
-            
-            services.AddMvc();
-        }
+        
 
     }
 }

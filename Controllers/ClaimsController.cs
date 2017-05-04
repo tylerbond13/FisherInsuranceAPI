@@ -1,44 +1,67 @@
 using Microsoft.AspNetCore.Mvc;
 using FisherInsuranceAPI.Data;
+using FisherInsuranceAPI.Models;
+
 
 [Route("api/claims")] 
 public class ClaimsController : Controller 
 { 
-        private IMemoryStore db;
-
-        public ClaimsController(IMemoryStore repo)
+        private readonly FisherContext db;
+    public ClaimsController (FisherContext context)
         {
-            db = repo;
+        db = context;
         }
+
+        // GET api/claims
+        [HttpGet]
+        public IActionResult GetClaims()
+        { 
+        return Ok(db.Claims);
+    }
+    
+    // GET api/claims/id
+    [HttpGet("{id}", Name = "GetClaims")]
+    public IActionResult Get(int id)
+    {
+        return Ok(db.Claims.Find(id));
+    }
 
     // POST api/claims
-        [HttpPost] 
-        public IActionResult Post([FromBody]string value) 
-        { 
-            return Created("", value); 
-        }
+    [HttpPost]
+    public IActionResult Post([FromBody]Claim claim)
+    {
+        var newClaim = db.Claims.Add(claim);
+        db.SaveChanges();
 
-        [HttpGet]
-        public IActionResult GetQuotes()
+        return CreatedAtRoute("GetClaim", new {id = claim.Id}, claim); 
+    }
+
+    // PUT api/claims/id
+    [HttpPut("{id}")]
+    public IActionResult Put(int id, [FromBody]Claim claim)
+    {
+        var newClaim = db.Claims.Find(id);
+        if (newClaim == null)
         {
-            return Ok(db.RetrieveAllQuotes);
+            return NotFound();
         }
-    // GET api/claims/5
-        [HttpGet("{id}")] 
-        public IActionResult Get(int id) 
-        { 
-           return Ok("The id is: " + id); 
+        newClaim = claim;
+
+        db.SaveChanges();
+        return Ok(newClaim);
+    }
+
+    // DELETE api/claims/id
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        var claimToDelete = db.Claims.Find(id);
+        if (claimToDelete == null)
+        {
+            return NotFound();
         }
-    // PUT api/claims/id 
-        [HttpPut("{id}")] 
-        public IActionResult Put(int id, [FromBody]string value) 
-        { 
-            return NoContent(); 
-        }
-    // DELETE api/claims/id 
-        [HttpDelete("{id}")] 
-        public IActionResult Delete(int id) 
-        { 
-            return Delete(id); 
-        }
+        db.Claims.Remove(claimToDelete);
+        db.SaveChangesAsync();
+        return NoContent();
+    }
 }
